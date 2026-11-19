@@ -1,5 +1,6 @@
 import { Heart, ShoppingBag } from 'lucide-react'
 import { categoryName } from '../../data/categories'
+import { useCatalog } from '../../context/CatalogContext'
 import { discountPercent } from '../../lib/format'
 import { Button } from '../ui/Button'
 import { DemoTag } from '../ui/DemoTag'
@@ -11,6 +12,7 @@ import type { Product } from '../../types'
 
 export function ProductCard({ product, onOpen }: { product: Product; onOpen: (p: Product) => void }) {
   const actions = useProductActions()
+  const { categories } = useCatalog()
   const available = canBuy(product.availability)
   const off = discountPercent(product.price, product.oldPrice)
 
@@ -25,7 +27,7 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: (p:
       </button>
 
       <div className="flex flex-1 flex-col p-3 sm:p-4">
-        <p className="text-[11px] font-semibold uppercase tracking-wider text-brand-600">{categoryName(product.category)}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-brand-600">{categoryName(product.category, categories)}</p>
         <button type="button" onClick={() => onOpen(product)} className="mt-1 text-left">
           <h3 className="line-clamp-2 font-sans text-sm font-semibold leading-snug text-ink sm:text-[15px]">{product.name}</h3>
         </button>

@@ -1,10 +1,9 @@
 import { LayoutGrid } from 'lucide-react'
-import { CATEGORIES } from '../../data/categories'
 import { cn } from '../../lib/format'
 import { CategoryIcon } from './CategoryIcon'
-import type { CategoryId } from '../../types'
+import type { Category, CategoryId } from '../../types'
 
-export function CategoryFilter({ value, onChange, counts }: { value: CategoryId | 'todos'; onChange: (v: CategoryId | 'todos') => void; counts: Record<string, number> }) {
+export function CategoryFilter({ categories, value, onChange, counts }: { categories: Category[]; value: CategoryId | 'todos'; onChange: (v: CategoryId | 'todos') => void; counts: Record<string, number> }) {
   const chip = (active: boolean) =>
     cn(
       'inline-flex h-10 shrink-0 items-center gap-2 rounded-full border px-4 text-sm font-medium transition',
@@ -17,7 +16,7 @@ export function CategoryFilter({ value, onChange, counts }: { value: CategoryId 
       <button role="tab" aria-selected={value === 'todos'} className={chip(value === 'todos')} onClick={() => onChange('todos')}>
         <LayoutGrid className="h-4 w-4" /> Todos <span className="opacity-60">{total}</span>
       </button>
-      {CATEGORIES.map((c) => (
+      {categories.map((c) => (
         <button key={c.id} role="tab" aria-selected={value === c.id} className={chip(value === c.id)} onClick={() => onChange(c.id)}>
           <CategoryIcon category={c.id} className="h-4 w-4" /> {c.short} <span className="opacity-60">{counts[c.id] ?? 0}</span>
         </button>

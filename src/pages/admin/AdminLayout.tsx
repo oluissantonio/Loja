@@ -54,7 +54,7 @@ export default function AdminLayout() {
         </header>
 
         <div className="bg-amber-100 px-4 py-2 text-center text-xs font-medium text-amber-900">
-          Modo demonstração: as alterações ficam salvas só neste navegador.
+          Modo demonstração: o painel ainda não está ligado ao banco de dados. As alterações aqui ficam só neste navegador e não mudam a loja.
         </div>
 
         <main className="flex-1 pb-24 lg:pb-8"><Outlet /></main>

@@ -4,7 +4,7 @@ import { cn } from '../../lib/format'
 import type { CategoryId } from '../../types'
 
 /** Ilustrações simples por categoria, usadas enquanto o produto não tem foto. */
-const art: Record<CategoryId, ReactElement> = {
+const art: Record<string, ReactElement> = {
   carregadores: (
     <g>
       <rect x="62" y="58" width="76" height="92" rx="16" fill="#fff" stroke="#0A1A3A" strokeWidth="5" />
@@ -13,7 +13,7 @@ const art: Record<CategoryId, ReactElement> = {
       <circle cx="100" cy="88" r="6" fill="#B9D0FF" />
     </g>
   ),
-  cabos: (
+  'cabos-acessorios': (
     <g fill="none" stroke="#0A1A3A" strokeWidth="5" strokeLinecap="round">
       <path d="M60 60c0 40 80 20 80 60s-40 30-40 30" />
       <rect x="48" y="36" width="24" height="28" rx="6" fill="#fff" />
@@ -39,7 +39,7 @@ const art: Record<CategoryId, ReactElement> = {
       <rect x="90" y="140" width="20" height="6" rx="3" fill="#0A1A3A" />
     </g>
   ),
-  acessorios: (
+  'outros-eletronicos': (
     <g fill="none" stroke="#0A1A3A" strokeWidth="5">
       <rect x="62" y="56" width="76" height="88" rx="22" fill="#fff" />
       <path d="M80 56l6-20h28l6 20M80 144l6 20h28l6-20" strokeLinejoin="round" />
@@ -57,7 +57,7 @@ export function ProductImage({ src, category, alt, className, showHint }: { src?
       ) : (
         <>
           <svg viewBox="0 0 200 200" className="mx-auto h-full w-full max-w-[220px] p-[12%]" role="img" aria-label={`Ilustração: ${alt}`}>
-            {art[category]}
+            {art[category] ?? art['outros-eletronicos']}
           </svg>
           {showHint && (
             <span className="absolute bottom-2 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full bg-white/80 px-2 py-0.5 text-[10px] font-medium text-ink-muted backdrop-blur">

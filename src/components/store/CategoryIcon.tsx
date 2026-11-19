@@ -1,9 +1,15 @@
-import { Cable, Headphones, Plug, BatteryCharging, Watch, type LucideProps } from 'lucide-react'
-import type { CategoryId } from '../../types'
+import { BatteryCharging, Cable, Cpu, Headphones, Plug, Watch, type LucideIcon, type LucideProps } from 'lucide-react'
 
-const icons = { carregadores: Plug, cabos: Cable, fones: Headphones, 'power-banks': BatteryCharging, acessorios: Watch }
+const icons: Record<string, LucideIcon> = {
+  carregadores: Plug,
+  'cabos-acessorios': Cable,
+  fones: Headphones,
+  'power-banks': BatteryCharging,
+  'outros-eletronicos': Watch,
+}
 
-export function CategoryIcon({ category, ...props }: { category: CategoryId } & LucideProps) {
-  const Icon = icons[category] ?? Plug
+/** Ícone da categoria. Categorias novas, criadas depois, recebem um ícone genérico. */
+export function CategoryIcon({ category, ...props }: { category: string } & LucideProps) {
+  const Icon = icons[category] ?? Cpu
   return <Icon {...props} />
 }

@@ -1,20 +1,19 @@
 import { useMemo, useState } from 'react'
 import { ArrowRight, BadgeCheck, Headset, PackageSearch, Search, ShieldCheck, Truck, Zap } from 'lucide-react'
-import { CATEGORIES } from '../data/categories'
-import { useProducts } from '../context/ProductsContext'
+import { useCatalog } from '../context/CatalogContext'
+import { CatalogError, CatalogUnconfigured, ProductGridSkeleton } from '../components/store/CatalogStatus'
 import { CategoryFilter } from '../components/store/CategoryFilter'
 import { CategoryIcon } from '../components/store/CategoryIcon'
 import { ProductCard } from '../components/store/ProductCard'
 import { ProductDetail } from '../components/store/ProductDetail'
 import { buttonClass } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
-import { DemoTag } from '../components/ui/DemoTag'
 import type { CategoryId, Product } from '../types'
 
 type Sort = 'relevancia' | 'menor-preco' | 'maior-preco' | 'nome'
 
 export default function Home() {
-  const { products } = useProducts()
+  const { products, categories, status, reload } = useCatalog()
   const [category, setCategory] = useState<CategoryId | 'todos'>('todos')
   const [query, setQuery] = useState('')
   const [sort, setSort] = useState<Sort>('relevancia')
@@ -28,10 +27,10 @@ export default function Home() {
     const list = products.filter(
       (p) =>
         (category === 'todos' || p.category === category) &&
-        (!onlyAvailable || p.availability === 'em-estoque' || p.availability === 'ultimas-unidades') &&
+        (!onlyAvailable || p.stock > 0) &&
         (!q || p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)),
     )
-    const rank = (p: Product) => (p.availability === 'esgotado' ? 2 : p.featured ? 0 : 1)
+    const rank = (p: Product) => (p.stock <= 0 ? 2 : p.featured ? 0 : 1)
     return [...list].sort((a, b) => {
       if (sort === 'menor-preco') return a.price - b.price
       if (sort === 'maior-preco') return b.price - a.price
@@ -73,7 +72,7 @@ export default function Home() {
           </div>
 
           <div className="hidden grid-cols-2 gap-3 lg:grid">
-            {CATEGORIES.slice(0, 4).map((c, i) => (
+            {categories.slice(0, 4).map((c, i) => (
               <button key={c.id} onClick={() => pickCategory(c.id)} className={`group rounded-3xl bg-white/[0.06] p-5 text-left ring-1 ring-inset ring-white/10 transition hover:bg-white/10 ${i % 2 ? 'translate-y-6' : ''}`}>
                 <div className="grid h-12 w-12 place-items-center rounded-2xl bg-brand-500 text-white"><CategoryIcon category={c.id} className="h-6 w-6" /></div>
                 <p className="mt-6 font-display font-semibold">{c.name}</p>
@@ -109,13 +108,13 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
           <SectionTitle eyebrow="Categorias" title="Encontre o que você precisa" />
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-            {CATEGORIES.map((c) => (
+            {categories.map((c) => (
               <button key={c.id} onClick={() => pickCategory(c.id)} className="group flex flex-col items-start rounded-2xl border border-line bg-white p-4 text-left transition hover:border-brand-200 hover:bg-brand-50 last:col-span-2 sm:last:col-span-1">
                 <div className="grid h-11 w-11 place-items-center rounded-xl bg-brand-50 text-brand-600 transition group-hover:bg-brand-500 group-hover:text-white">
                   <CategoryIcon category={c.id} className="h-5 w-5" />
                 </div>
                 <p className="mt-4 font-display text-[15px] font-semibold">{c.name}</p>
-                <p className="text-xs text-ink-muted">{counts[c.id] ?? 0} produtos</p>
+                <p className="text-xs text-ink-muted">{status === 'ready' ? `${counts[c.id] ?? 0} ${(counts[c.id] ?? 0) === 1 ? 'produto' : 'produtos'}` : ' '}</p>
               </button>
             ))}
           </div>
@@ -125,10 +124,7 @@ export default function Home() {
       {/* Catálogo */}
       <section id="produtos" className="scroll-mt-16 bg-slate-50/70">
         <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <SectionTitle eyebrow="Catálogo" title="Nossos produtos" />
-            <DemoTag />
-          </div>
+          <SectionTitle eyebrow="Catálogo" title="Nossos produtos" />
 
           <div className="sticky top-16 z-30 -mx-4 mt-6 space-y-3 bg-slate-50/95 px-4 py-3 backdrop-blur sm:static sm:mx-0 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none">
             <div className="flex gap-2">
@@ -153,18 +149,24 @@ export default function Home() {
                 </select>
               </label>
             </div>
-            <CategoryFilter value={category} onChange={setCategory} counts={counts} />
+            <CategoryFilter categories={categories} value={category} onChange={setCategory} counts={counts} />
           </div>
 
           <div className="mt-4 flex items-center justify-between text-sm text-ink-muted">
-            <span>{visible.length} {visible.length === 1 ? 'produto' : 'produtos'}</span>
+            <span>{status === 'ready' ? `${visible.length} ${visible.length === 1 ? 'produto' : 'produtos'}` : status === 'loading' ? 'Carregando…' : ' '}</span>
             <label className="inline-flex cursor-pointer items-center gap-2">
               <input type="checkbox" checked={onlyAvailable} onChange={(e) => setOnlyAvailable(e.target.checked)} className="h-4 w-4 rounded border-line accent-brand-500" />
               Só disponíveis
             </label>
           </div>
 
-          {visible.length === 0 ? (
+          {status === 'unconfigured' ? (
+            <CatalogUnconfigured />
+          ) : status === 'loading' ? (
+            <ProductGridSkeleton />
+          ) : status === 'error' ? (
+            <CatalogError onRetry={reload} />
+          ) : visible.length === 0 ? (
             <EmptyState icon={<PackageSearch className="h-6 w-6" />} title="Nenhum produto encontrado" text="Tente outra busca ou escolha outra categoria." />
           ) : (
             <div className="mt-4 grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -187,8 +189,8 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-3 gap-3">
             {[
-              { n: '+15', l: 'produtos' },
-              { n: '5', l: 'categorias' },
+              { n: status === 'ready' ? String(products.length) : '–', l: 'produtos' },
+              { n: status === 'ready' ? String(categories.length) : '–', l: 'categorias' },
               { n: '90 dias', l: 'de garantia' },
             ].map((s) => (
               <div key={s.l} className="rounded-2xl bg-brand-50 p-4 text-center sm:p-6">

@@ -5,11 +5,11 @@ import { uid } from '../lib/format'
 import type { Product } from '../types'
 
 /**
- * Camada de produtos. Nesta etapa os dados ficam no navegador (localStorage)
- * para o painel funcionar de verdade na demonstração. Na etapa do Supabase,
- * só esta camada muda: a interface continua a mesma.
+ * Produtos do PAINEL DE DEMONSTRAÇÃO. Ficam só no navegador (localStorage)
+ * e não afetam a loja, que lê do Supabase (ver CatalogContext).
+ * Será substituído pela gestão real de produtos na etapa do painel.
  */
-const KEY = 'hillutec:products:v1'
+const KEY = 'hillutec:admin-demo-products:v2'
 
 interface ProductsContextValue {
   products: Product[]

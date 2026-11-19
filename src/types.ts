@@ -1,4 +1,5 @@
-export type CategoryId = 'carregadores' | 'cabos' | 'fones' | 'power-banks' | 'acessorios'
+/** Identificador (slug) da categoria, igual à coluna categories.slug do banco. */
+export type CategoryId = string
 
 export interface Category {
   id: CategoryId
@@ -18,10 +19,10 @@ export interface Product {
   oldPrice?: number
   stock: number
   availability: Availability
-  /** URL ou data URL da foto. Sem foto, a interface mostra uma ilustração da categoria. */
+  /** URL pública da foto. Sem foto, a interface mostra uma ilustração da categoria. */
   image?: string
   featured?: boolean
-  /** Marca o produto como dado demonstrativo. */
+  /** Marca o produto como dado demonstrativo (usado só no painel, por enquanto). */
   demo?: boolean
 }
 

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import { load, save } from '../lib/storage'
-import { useProducts } from './ProductsContext'
+import { useCatalog } from './CatalogContext'
 import type { CartItem, Product } from '../types'
 
 const KEY = 'hillutec:cart:v1'
@@ -25,13 +25,28 @@ interface CartContextValue {
 const CartContext = createContext<CartContextValue | null>(null)
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const { products } = useProducts()
+  const { products, status } = useCatalog()
   const [items, setItems] = useState<CartItem[]>(() => load(KEY, []))
   const [isOpen, setOpen] = useState(false)
 
   useEffect(() => save(KEY, items), [items])
 
-  // Junta cada item ao produto atual; itens de produtos removidos somem do carrinho.
+  // Com o catálogo carregado, limpa do carrinho o que não está mais à venda.
+  useEffect(() => {
+    if (status !== 'ready') return
+    setItems((list) => {
+      const next = list.flatMap((i) => {
+        const p = products.find((x) => x.id === i.productId)
+        if (!p || p.stock <= 0) return []
+        return [{ ...i, quantity: Math.min(i.quantity, p.stock) }]
+      })
+      const same = next.length === list.length && next.every((n, k) => n.quantity === list[k].quantity)
+      return same ? list : next
+    })
+  }, [status, products])
+
+  // Junta cada item ao produto atual do catálogo. Itens de produtos que saíram
+  // do catálogo (inativos ou excluídos) deixam de aparecer.
   const lines = useMemo(
     () =>
       items.flatMap((item) => {

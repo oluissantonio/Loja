@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { CartProvider } from './context/CartContext'
+import { CatalogProvider } from './context/CatalogContext'
 import { ProductsProvider } from './context/ProductsContext'
 import { ToastProvider } from './context/ToastContext'
 import StoreLayout from './pages/StoreLayout'
@@ -14,6 +15,7 @@ export default function App() {
   return (
     <ToastProvider>
       <ProductsProvider>
+        <CatalogProvider>
         <CartProvider>
           <AuthProvider>
             <BrowserRouter>
@@ -31,6 +33,7 @@ export default function App() {
             </BrowserRouter>
           </AuthProvider>
         </CartProvider>
+        </CatalogProvider>
       </ProductsProvider>
     </ToastProvider>
   )

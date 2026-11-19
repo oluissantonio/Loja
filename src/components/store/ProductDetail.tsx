@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Heart, ShieldCheck, ShoppingBag, Truck } from 'lucide-react'
 import { categoryName } from '../../data/categories'
+import { useCatalog } from '../../context/CatalogContext'
 import { Button } from '../ui/Button'
 import { DemoTag } from '../ui/DemoTag'
 import { Modal } from '../ui/Modal'
@@ -14,6 +15,7 @@ import type { Product } from '../../types'
 export function ProductDetail({ product, onClose }: { product: Product | null; onClose: () => void }) {
   const [qty, setQty] = useState(1)
   const actions = useProductActions()
+  const { categories } = useCatalog()
   useEffect(() => setQty(1), [product?.id])
 
   if (!product) return null
@@ -26,7 +28,7 @@ export function ProductDetail({ product, onClose }: { product: Product | null; o
         <ProductImage src={product.image} category={product.category} alt={product.name} showHint className="aspect-[4/3] sm:aspect-auto sm:h-full sm:min-h-[380px]" />
         <div className="flex flex-col p-5 sm:p-6">
           <div className="flex items-center gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">{categoryName(product.category)}</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">{categoryName(product.category, categories)}</p>
             {product.demo && <DemoTag />}
           </div>
           <h2 className="mt-1.5 text-xl font-semibold leading-tight sm:text-2xl">{product.name}</h2>
