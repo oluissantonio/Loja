@@ -73,6 +73,13 @@ if (target) {
   else fail('Visitante conseguiu excluir um produto!')
 }
 
+if (target) {
+  const rpc = await db.rpc('adjust_stock', { p_product_id: target.id, p_mode: 'set', p_quantity: 999, p_reason: 'ajuste' })
+  refused(rpc) ? ok('Visitante NÃO consegue alterar estoque pela função de estoque') : fail('Visitante conseguiu alterar o estoque!')
+}
+const hist = await db.from('stock_movements').select('id').limit(1)
+refused(hist) || (!hist.error && hist.data.length === 0) ? ok('Histórico de estoque não é exposto') : fail('Histórico de estoque está exposto!')
+
 const catIns = await db.from('categories').insert({ slug: 'teste-invasor', name: 'x' })
 refused(catIns) ? ok('Visitante NÃO consegue criar categorias') : fail('Visitante conseguiu criar uma categoria!')
 

@@ -18,6 +18,7 @@ export const categoryName = (id: string, list: Category[] = CATEGORIES) => list.
 export const AVAILABILITY: Record<Availability, { label: string; tone: 'green' | 'amber' | 'blue' | 'gray' }> = {
   'em-estoque': { label: 'Em estoque', tone: 'green' },
   'ultimas-unidades': { label: 'Últimas unidades', tone: 'amber' },
+  'ultima-unidade': { label: 'Última unidade', tone: 'amber' },
   'sob-encomenda': { label: 'Sob encomenda', tone: 'blue' },
   esgotado: { label: 'Esgotado', tone: 'gray' },
 }

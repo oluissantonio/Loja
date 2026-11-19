@@ -14,7 +14,7 @@ const key = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? import.meta.env.VI
 export const supabaseConfigured = Boolean(url && key)
 
 export const supabase: SupabaseClient | null = supabaseConfigured
-  ? createClient(url!, key!, { auth: { persistSession: false, autoRefreshToken: false } })
+  ? createClient(url!, key!, { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'hillutec-admin-auth' } })
   : null
 
 /** Bucket do Storage com as fotos dos produtos. Organização: <id do produto>/<arquivo>. */

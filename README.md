@@ -2,71 +2,60 @@
 
 Loja de acessórios eletrônicos (carregadores, cabos, fones, power banks e outros), feita com **React + Vite + TypeScript + Tailwind CSS**, pensada primeiro para o celular.
 
-> **Etapa 2 — banco de dados.** O catálogo da loja é lido do **Supabase** (banco + fotos no Storage), com regras de segurança (RLS). O painel administrativo ainda é uma demonstração e será ligado ao banco na próxima etapa. WhatsApp, pedidos e pagamentos ainda não existem.
+> **Etapa 3 — painel administrativo.** O catálogo é lido do **Supabase** e o painel `/admin` gerencia produtos, fotos, estoque e categorias de verdade, com login real (Supabase Auth) e regras de segurança (RLS). WhatsApp, pedidos e pagamentos ainda não existem.
 
 ## O que já funciona
 
 **Loja (`/`)**
-- Cabeçalho com menu (vira menu sanfona no celular) e botão do carrinho.
-- Boas-vindas, vantagens, categorias, catálogo e apresentação da loja.
-- **Produtos e categorias vêm do Supabase.** Só aparecem produtos com status `ativo` (de categorias ativas).
-- Disponibilidade calculada pelo estoque real: `0` → **Esgotado**, até `5` → **Últimas unidades**, acima disso → **Em estoque**.
-- O site se atualiza sozinho quando o banco muda (tempo real), ao voltar para a aba e a cada minuto.
-- Busca, filtro por categoria, ordenação, "só disponíveis", detalhes do produto e carrinho (limitado ao estoque).
+- Produtos e categorias vêm do Supabase. Só aparecem produtos `ativo` de categorias ativas.
+- Disponibilidade pelo estoque real: `0` → **Esgotado** (sem botão de compra), `1` → **Última unidade**, até o limite de estoque baixo → **Últimas unidades**, acima → **Em estoque**.
+- Atualiza sozinho quando o banco muda. Clicar em "Comprar" **não** mexe no estoque.
 
-**Painel administrativo (`/admin`) — demonstração**
-- Login de demonstração (`admin@hillutec.demo` / `demo1234`) e gestão de produtos de exemplo, salvos só no navegador. **Não altera a loja.**
+**Painel (`/admin`)** — só para administradores
+- Login com e-mail e senha do Supabase. Contas que não estão na tabela `admins` são recusadas.
+- Indicadores reais: produtos cadastrados, ativos, esgotados, estoque baixo e unidades em estoque.
+- Busca, filtros (categoria e situação) e ordenação.
+- Cadastrar, editar e excluir produtos (nome, descrição, preço, preço antigo, estoque, categoria, status, destaque).
+- Fotos: escolher do celular ou computador, ver a prévia, trocar e remover. A foto é reduzida automaticamente (máx. 1600 px, WebP) antes do envio.
+- Chave **Ativo/Inativo** para mostrar ou esconder o produto da loja.
+- **Estoque manual**: registrar entrada, registrar venda, definir a quantidade exata ou corrigir erro de contagem, com histórico das últimas movimentações.
+- **Categorias**: criar, renomear, ocultar, reordenar e excluir (os produtos são movidos para outra categoria antes da exclusão).
+
+**Estoque baixo:** a regra (hoje **2 unidades ou menos**) fica em `src/lib/availability.ts`, na constante `LOW_STOCK_LIMIT`.
 
 ## Configurar o Supabase (uma vez)
 
-1. Crie uma conta em [supabase.com](https://supabase.com) e clique em **New project**. Escolha um nome (ex.: `hillutec`), uma senha forte para o banco (guarde-a) e a região **South America (São Paulo)**.
-2. Quando o projeto terminar de criar, abra **SQL Editor → New query**, cole todo o conteúdo de [`supabase/migrations/20261119000000_catalogo.sql`](supabase/migrations/20261119000000_catalogo.sql) e clique em **Run**. Isso cria as tabelas, as 5 categorias, as regras de segurança, o bucket de fotos `product-images` e o tempo real.
-3. (Opcional) Para testar com alguns produtos, rode também [`supabase/produtos-de-teste.sql`](supabase/produtos-de-teste.sql). Eles têm `[TESTE]` no nome e podem ser apagados depois.
-4. Em **Authentication → Sign In / Providers**, desative **Allow new users to sign up**. Assim ninguém cria conta sozinho; os administradores serão cadastrados por você.
-5. Em **Project Settings → API Keys** (ou **Data API**), copie a **Project URL** e a chave pública (**anon** ou **publishable**).
-6. Na pasta do projeto, copie `.env.example` para `.env.local` e preencha:
+1. Crie o projeto em [supabase.com](https://supabase.com) (região **South America (São Paulo)**).
+2. No **SQL Editor**, rode **em ordem** cada arquivo de [`supabase/migrations/`](supabase/migrations/):
+   1. `20261119000000_catalogo.sql` — tabelas, categorias, RLS, fotos e tempo real.
+   2. `20261120000000_painel_admin.sql` — controle de estoque com histórico.
+3. (Opcional) Rode [`supabase/produtos-de-teste.sql`](supabase/produtos-de-teste.sql) para ter produtos de teste.
+4. Em **Authentication → Sign In / Providers**, desative **Allow new users to sign up**.
+5. Copie a **Project URL** e a chave pública (**publishable** ou **anon**) para o `.env.local` (veja `.env.example`). Nunca use a chave **secret / service_role** no site.
 
+## Criar o administrador
+
+1. Em **Authentication → Users → Add user → Create new user**, informe o seu e-mail e uma senha forte, marque **Auto Confirm User** e crie.
+2. No **SQL Editor**, rode (trocando o e-mail):
+
+   ```sql
+   insert into public.admins (user_id)
+   select id from auth.users where email = 'seu-email@exemplo.com';
    ```
-   VITE_SUPABASE_URL=https://xxxx.supabase.co
-   VITE_SUPABASE_ANON_KEY=sua-chave-publica
-   ```
 
-   Nunca use a chave **service_role / secret** no site: ela ignora todas as regras de segurança. O `.env.local` não vai para o GitHub.
+3. Entre em `/admin` com esse e-mail e senha.
 
-## Cadastrar produtos (até o painel ficar pronto)
+Para tirar o acesso de alguém: `delete from public.admins where user_id = (select id from auth.users where email = '...');`
 
-No Supabase, abra **Table Editor → products → Insert row**:
-
-| Campo | O que colocar |
-| --- | --- |
-| `name`, `description` | Nome e descrição |
-| `price` | Preço de venda (ex.: `79.90`) |
-| `compare_at_price` | Opcional: preço antigo, maior que o atual, aparece riscado |
-| `stock` | Quantidade em estoque (`0` = esgotado) |
-| `category_id` | Escolha a categoria na lista |
-| `status` | `ativo` aparece no site, `inativo` fica escondido |
-| `featured` | `true` para aparecer primeiro |
-| `image_path` | Caminho da foto no Storage (veja abaixo) |
-
-`id`, `created_at` e `updated_at` são preenchidos automaticamente.
-
-**Fotos:** em **Storage → product-images**, crie uma pasta com o `id` do produto e envie a foto (JPG, PNG, WebP ou AVIF, até 5 MB). Depois coloque em `image_path` o caminho, por exemplo `3f2a…/foto.jpg`.
-
-**Novas categorias:** em **Table Editor → categories → Insert row**, preencha `slug` (minúsculas e hífens, ex.: `caixas-de-som`), `name` e `sort_order`. Ela aparece no site automaticamente.
+Só quem tem acesso ao painel do Supabase consegue criar administradores. Nenhuma senha fica no código.
 
 ## Segurança (RLS)
 
-- Visitantes e usuários comuns **só leem** produtos ativos e categorias ativas. Não conseguem criar, alterar ou excluir nada, nem enviar fotos.
+- Visitantes e usuários comuns **só leem** produtos ativos e categorias ativas. Não conseguem criar, alterar ou excluir nada, mudar estoque, ver o histórico de estoque nem enviar fotos.
+- O estoque só muda pelo painel (ou pela função `adjust_stock`, que também exige administrador). Preço e estoque negativos são recusados pelo próprio banco.
 - Alterações são permitidas apenas a usuários logados **e** cadastrados na tabela `admins`. Estar logado não basta.
 - A lista de administradores não é exposta, e ninguém consegue se promover a administrador pela API.
 - O navegador usa só a chave pública. A chave secreta nunca entra no código.
-
-Para tornar alguém administrador (será usado na etapa do painel): crie o usuário em **Authentication → Users → Add user** e rode no SQL Editor:
-
-```sql
-insert into public.admins (user_id)
-select id from auth.users where email = 'email-do-administrador@exemplo.com';
-```
 
 ## Verificar se está funcionando
 
@@ -112,6 +101,5 @@ supabase/
 
 ## Próximas etapas
 
-- Painel administrativo e login reais com Supabase (cadastro de produtos e fotos).
 - Envio do pedido e do interesse pelo WhatsApp (`src/components/store/useProductActions.ts` e `CartDrawer.tsx`).
 - Publicação.

@@ -7,4 +7,4 @@ export function AvailabilityBadge({ value, className }: { value: Availability; c
   return <Badge tone={a.tone} dot className={className}>{a.label}</Badge>
 }
 
-export const canBuy = (a: Availability) => a === 'em-estoque' || a === 'ultimas-unidades'
+export { canBuy } from '../../lib/availability'

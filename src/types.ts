@@ -7,7 +7,7 @@ export interface Category {
   short: string
 }
 
-export type Availability = 'em-estoque' | 'ultimas-unidades' | 'sob-encomenda' | 'esgotado'
+export type Availability = 'em-estoque' | 'ultimas-unidades' | 'ultima-unidade' | 'sob-encomenda' | 'esgotado'
 
 export interface Product {
   id: string

@@ -51,8 +51,10 @@ export async function fetchCatalog(): Promise<{ categories: Category[]; products
     supabase.from('categories').select('slug, name, sort_order').eq('is_active', true).order('sort_order').order('name'),
     supabase
       .from('products')
-      .select('id, name, description, price, compare_at_price, stock, image_path, featured, category:categories!inner(slug)')
+      .select('id, name, description, price, compare_at_price, stock, image_path, featured, category:categories!inner(slug, is_active)')
+      // Filtros explícitos: mesmo um administrador logado vê a loja como o público.
       .eq('status', 'ativo')
+      .eq('category.is_active', true)
       .order('featured', { ascending: false })
       .order('created_at', { ascending: false }),
   ])
