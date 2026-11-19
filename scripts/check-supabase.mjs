@@ -31,10 +31,18 @@ if (!url || !key) {
 const db = createClient(url, key, { auth: { persistSession: false } })
 let failures = 0
 const ok = (msg) => console.log('✓', msg)
+// Uma escrita só conta como bloqueada se o Supabase respondeu recusando (não por falha de rede).
+const refused = (r) => !!r.error && !/fetch failed|network|Failed to fetch/i.test(r.error.message)
 const fail = (msg) => { failures++; console.log('✗', msg) }
 
 // 1. Conexão e leitura
-const cats = await db.from('categories').select('slug, name').order('sort_order')
+const cats = await db.from('categories').select('id, slug, name').order('sort_order')
+if (cats.error && /fetch failed|network|Failed to fetch/i.test(cats.error.message)) {
+  // Sem conexão, os testes de segurança abaixo dariam falsos positivos: para aqui.
+  console.error(`✗ Não foi possível conectar a ${url}: ${cats.error.message}`)
+  console.error('  Confira a internet, o endereço e a chave em .env.local.')
+  process.exit(1)
+}
 if (cats.error) fail(`Leitura das categorias: ${cats.error.message}`)
 else ok(`Conexão OK — ${cats.data.length} categorias: ${cats.data.map((c) => c.name).join(', ')}`)
 
@@ -53,24 +61,26 @@ else {
 
 // 2. Segurança: visitante não pode alterar nada
 const target = prods.data?.[0]
-const ins = await db.from('products').insert({ name: 'teste-invasor', price: 1, category_id: '00000000-0000-0000-0000-000000000000' })
-ins.error ? ok('Visitante NÃO consegue cadastrar produtos') : fail('Visitante conseguiu cadastrar um produto!')
+const ins = await db.from('products').insert({ name: 'teste-invasor', price: 1, category_id: cats.data?.[0]?.id })
+refused(ins) ? ok('Visitante NÃO consegue cadastrar produtos') : fail('Visitante conseguiu cadastrar um produto!')
 
 if (target) {
   const upd = await db.from('products').update({ price: 0.01, stock: 999 }).eq('id', target.id).select()
-  !upd.error && upd.data.length === 0 || upd.error ? ok('Visitante NÃO consegue alterar preço/estoque') : fail('Visitante conseguiu alterar um produto!')
+  if ((!upd.error && upd.data.length === 0) || refused(upd)) ok('Visitante NÃO consegue alterar preço/estoque')
+  else fail('Visitante conseguiu alterar um produto!')
   const del = await db.from('products').delete().eq('id', target.id).select()
-  !del.error && del.data.length === 0 || del.error ? ok('Visitante NÃO consegue excluir produtos') : fail('Visitante conseguiu excluir um produto!')
+  if ((!del.error && del.data.length === 0) || refused(del)) ok('Visitante NÃO consegue excluir produtos')
+  else fail('Visitante conseguiu excluir um produto!')
 }
 
 const catIns = await db.from('categories').insert({ slug: 'teste-invasor', name: 'x' })
-catIns.error ? ok('Visitante NÃO consegue criar categorias') : fail('Visitante conseguiu criar uma categoria!')
+refused(catIns) ? ok('Visitante NÃO consegue criar categorias') : fail('Visitante conseguiu criar uma categoria!')
 
 const admins = await db.from('admins').select('*')
-admins.error || admins.data.length === 0 ? ok('Lista de administradores não é exposta') : fail('Lista de administradores está exposta!')
+refused(admins) || (!admins.error && admins.data.length === 0) ? ok('Lista de administradores não é exposta') : fail('Lista de administradores está exposta!')
 
 const up = await db.storage.from('product-images').upload(`teste-invasor-${Date.now()}.png`, new Blob([new Uint8Array([137, 80, 78, 71])], { type: 'image/png' }))
-up.error ? ok('Visitante NÃO consegue enviar fotos') : fail('Visitante conseguiu enviar uma foto!')
+refused(up) ? ok('Visitante NÃO consegue enviar fotos') : fail('Visitante conseguiu enviar uma foto!')
 
 console.log(failures ? `\n${failures} problema(s) encontrado(s).` : '\nTudo certo!')
 process.exit(failures ? 1 : 0)

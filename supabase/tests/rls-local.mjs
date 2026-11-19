@@ -112,9 +112,13 @@ try {
   let recebido = false
   const ch = anon.channel(`t-${tag}`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'products' }, () => { recebido = true })
   await new Promise((r) => ch.subscribe((s) => s === 'SUBSCRIBED' && r()))
-  await sleep(1000)
-  must(await service.from('products').update({ price: 81 }).eq('id', alvo.id))
-  for (let i = 0; i < 20 && !recebido; i++) await sleep(250)
+  // Logo após o "supabase start" o Realtime pode levar alguns segundos para
+  // começar a entregar eventos: tenta algumas vezes antes de considerar falha.
+  for (let tentativa = 0; tentativa < 4 && !recebido; tentativa++) {
+    await sleep(1500)
+    must(await service.from('products').update({ price: 81 + tentativa }).eq('id', alvo.id))
+    for (let i = 0; i < 20 && !recebido; i++) await sleep(250)
+  }
   check(recebido, 'visitante recebe a mudança de preço em tempo real')
   await anon.removeChannel(ch)
 } finally {
