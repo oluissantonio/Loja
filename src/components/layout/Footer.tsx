@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { Instagram, MapPin, Phone } from 'lucide-react'
 import { Logo } from '../ui/Logo'
 import { NAV } from './Header'
@@ -15,7 +14,6 @@ export function Footer() {
           <p className="font-display text-sm font-semibold text-white">Navegação</p>
           <ul className="mt-3 space-y-2 text-sm">
             {NAV.map((n) => <li key={n.href}><a href={n.href} className="hover:text-white">{n.label}</a></li>)}
-            <li><Link to="/admin" className="hover:text-white">Painel administrativo</Link></li>
           </ul>
         </div>
         <div>

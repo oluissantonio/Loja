@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Menu, ShoppingBag, UserCog, X } from 'lucide-react'
+import { Menu, ShoppingBag, X } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
 import { cn } from '../../lib/format'
 import { Logo } from '../ui/Logo'
@@ -39,10 +38,6 @@ export function Header() {
             <a key={n.href} href={n.href} className="rounded-lg px-3 py-2 text-sm font-medium text-ink-muted transition hover:bg-brand-50 hover:text-navy-900">{n.label}</a>
           ))}
         </nav>
-
-        <Link to="/admin" className="hidden h-10 items-center gap-2 rounded-xl px-3 text-sm font-medium text-ink-muted hover:bg-brand-50 hover:text-navy-900 sm:inline-flex">
-          <UserCog className="h-4 w-4" /> Painel
-        </Link>
         <button onClick={cart.open} className="relative grid h-10 w-10 place-items-center rounded-xl bg-navy-900 text-white transition hover:bg-navy-800" aria-label={`Abrir carrinho, ${cart.count} itens`}>
           <ShoppingBag className="h-5 w-5" />
           {cart.count > 0 && (
@@ -56,9 +51,6 @@ export function Header() {
           {NAV.map((n) => (
             <a key={n.href} href={n.href} onClick={() => setMenu(false)} className="flex h-12 items-center rounded-xl px-3 text-base font-medium text-ink hover:bg-brand-50">{n.label}</a>
           ))}
-          <Link to="/admin" className="mt-1 flex h-12 items-center gap-2 rounded-xl px-3 text-base font-medium text-ink-muted hover:bg-brand-50">
-            <UserCog className="h-4 w-4" /> Painel administrativo
-          </Link>
         </nav>
       )}
     </header>
