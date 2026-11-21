@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Instagram, Mail, MapPin, MessageCircle } from 'lucide-react'
+import { Instagram, MapPin, Phone } from 'lucide-react'
 import { Logo } from '../ui/Logo'
 import { NAV } from './Header'
 
@@ -19,12 +19,11 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <p className="font-display text-sm font-semibold text-white">Contato <span className="ml-1 rounded bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-amber-200">exemplo</span></p>
+          <p className="font-display text-sm font-semibold text-white">Contato</p>
           <ul className="mt-3 space-y-2.5 text-sm">
-            <li className="flex items-center gap-2"><MessageCircle className="h-4 w-4 text-brand-400" /> (00) 00000-0000</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-brand-400" /> contato@hillutec.demo</li>
-            <li className="flex items-center gap-2"><Instagram className="h-4 w-4 text-brand-400" /> @hillutec</li>
-            <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand-400" /> Sua cidade, UF</li>
+            <li><a href="tel:+5581999355098" className="flex items-center gap-2 hover:text-white"><Phone className="h-4 w-4 text-brand-400" /> (81) 99935-5098</a></li>
+            <li><a href="https://instagram.com/hillutec" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white"><Instagram className="h-4 w-4 text-brand-400" /> @hillutec</a></li>
+            <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand-400" /> Recife, PE</li>
           </ul>
         </div>
       </div>
