@@ -1,4 +1,4 @@
-# HILLUTEC — loja virtual
+# HILLUTECH — loja virtual
 
 Loja de acessórios eletrônicos (carregadores, cabos, fones, power banks e outros), feita com **React + Vite + TypeScript + Tailwind CSS**, pensada primeiro para o celular.
 

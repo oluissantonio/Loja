@@ -55,7 +55,7 @@ export default function Login() {
           <Logo className="lg:hidden" />
           <div className="mt-8 grid h-12 w-12 place-items-center rounded-2xl bg-brand-50 text-brand-600 lg:mt-0"><Lock className="h-5 w-5" /></div>
           <h1 className="mt-5 text-2xl font-bold text-navy-900">Painel administrativo</h1>
-          <p className="mt-1.5 text-sm text-ink-muted">Acesso restrito a administradores da HILLUTEC.</p>
+          <p className="mt-1.5 text-sm text-ink-muted">Acesso restrito a administradores da HILLUTECH.</p>
 
           {auth.status === 'loading' ? (
             <div className="mt-10 flex items-center gap-2 text-sm text-ink-muted"><Loader2 className="h-4 w-4 animate-spin" /> Verificando sessão…</div>
@@ -72,7 +72,7 @@ export default function Login() {
               {notAdmin && (
                 <div className="flex gap-2.5 rounded-xl bg-amber-50 px-3 py-2.5 text-sm text-amber-900" role="alert">
                   <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" />
-                  <p><strong>Acesso não autorizado.</strong> Esta conta não é administradora da loja. Fale com o responsável pela HILLUTEC.</p>
+                  <p><strong>Acesso não autorizado.</strong> Esta conta não é administradora da loja. Fale com o responsável pela HILLUTECH.</p>
                 </div>
               )}
               <Button type="submit" size="lg" block disabled={loading || !supabaseConfigured}>

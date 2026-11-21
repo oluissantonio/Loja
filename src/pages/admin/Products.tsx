@@ -162,7 +162,7 @@ export default function Products() {
         ) : status === 'error' ? (
           <EmptyState icon={<AlertTriangle className="h-6 w-6" />} title="Não foi possível carregar" text={error ?? undefined} action={<Button variant="outline" onClick={() => reload()}><RefreshCw className="h-4 w-4" /> Tentar de novo</Button>} />
         ) : products.length === 0 ? (
-          <EmptyState icon={<Package className="h-6 w-6" />} title="Nenhum produto cadastrado" text="Cadastre o primeiro produto da HILLUTEC." action={<Button onClick={openNew}><Plus className="h-4 w-4" /> Novo produto</Button>} />
+          <EmptyState icon={<Package className="h-6 w-6" />} title="Nenhum produto cadastrado" text="Cadastre o primeiro produto da HILLUTECH." action={<Button onClick={openNew}><Plus className="h-4 w-4" /> Novo produto</Button>} />
         ) : visible.length === 0 ? (
           <EmptyState icon={<Search className="h-6 w-6" />} title="Nenhum produto encontrado" text="Ajuste a busca ou os filtros." action={<Button variant="outline" onClick={() => showFilter('todos')}>Limpar filtros</Button>} />
         ) : (

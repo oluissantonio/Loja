@@ -32,7 +32,7 @@ export function Header() {
           {menu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
 
-        <a href="#inicio" className="mr-auto md:mr-6" aria-label="HILLUTEC — início"><Logo /></a>
+        <a href="#inicio" className="mr-auto md:mr-6" aria-label="HILLUTECH — início"><Logo /></a>
 
         <nav className="hidden flex-1 items-center gap-1 md:flex" aria-label="Navegação principal">
           {NAV.map((n) => (

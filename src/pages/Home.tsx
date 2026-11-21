@@ -56,7 +56,7 @@ export default function Home() {
               <Zap className="h-3.5 w-3.5 text-brand-400" /> Tecnologia que acompanha você
             </span>
             <h1 className="mt-5 text-[2.1rem] font-bold leading-[1.1] sm:text-5xl">
-              Seja bem-vindo à <span className="text-brand-400">HILLUTEC!</span>
+              Seja bem-vindo à <span className="text-brand-400">HILLUTECH!</span>
             </h1>
             <p className="mt-4 max-w-lg text-base leading-relaxed text-white/75 sm:text-lg">
               Carregadores, cabos, fones, power banks e acessórios com qualidade, preço justo e atendimento de perto.
@@ -180,9 +180,9 @@ export default function Home() {
       <section id="sobre" className="scroll-mt-20 bg-white">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:py-20 lg:grid-cols-2 lg:items-center">
           <div>
-            <SectionTitle eyebrow="Sobre a HILLUTEC" title="Acessórios confiáveis para quem vive conectado" />
+            <SectionTitle eyebrow="Sobre a HILLUTECH" title="Acessórios confiáveis para quem vive conectado" />
             <p className="mt-4 leading-relaxed text-ink-muted">
-              A HILLUTEC nasceu para facilitar a escolha de acessórios eletrônicos. Selecionamos carregadores, cabos, fones e power banks que unem
+              A HILLUTECH nasceu para facilitar a escolha de acessórios eletrônicos. Selecionamos carregadores, cabos, fones e power banks que unem
               durabilidade, segurança e bom preço — e explicamos cada produto de forma simples, para você comprar com tranquilidade.
             </p>
             <p className="mt-3 leading-relaxed text-ink-muted">Ficou com dúvida sobre compatibilidade? Fale com a gente antes de comprar: ajudamos você a escolher o item certo.</p>

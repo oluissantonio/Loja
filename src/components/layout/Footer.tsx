@@ -22,12 +22,12 @@ export function Footer() {
           <p className="font-display text-sm font-semibold text-white">Contato</p>
           <ul className="mt-3 space-y-2.5 text-sm">
             <li><a href="tel:+5581999355098" className="flex items-center gap-2 hover:text-white"><Phone className="h-4 w-4 text-brand-400" /> (81) 99935-5098</a></li>
-            <li><a href="https://instagram.com/hillutec" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white"><Instagram className="h-4 w-4 text-brand-400" /> @hillutec</a></li>
+            <li><a href="https://www.instagram.com/hillutech" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white"><Instagram className="h-4 w-4 text-brand-400" /> @hillutech</a></li>
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand-400" /> Recife, PE</li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-white/40">© {new Date().getFullYear()} HILLUTEC. Todos os direitos reservados.</div>
+      <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-white/40">© {new Date().getFullYear()} HILLUTECH. Todos os direitos reservados.</div>
     </footer>
   )
 }
