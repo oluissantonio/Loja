@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ArrowRight, BadgeCheck, Headset, PackageSearch, Search, ShieldCheck, Truck, Zap } from 'lucide-react'
 import { useCatalog } from '../context/CatalogContext'
+import { scrollToSection } from '../lib/smoothScroll'
 import { CatalogError, CatalogUnconfigured, ProductGridSkeleton } from '../components/store/CatalogStatus'
 import { CategoryFilter } from '../components/store/CategoryFilter'
 import { CategoryIcon } from '../components/store/CategoryIcon'
@@ -41,7 +42,7 @@ export default function Home() {
 
   const pickCategory = (id: CategoryId) => {
     setCategory(id)
-    document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth' })
+    scrollToSection('produtos')
   }
 
   return (
