@@ -1,6 +1,6 @@
 import { MessageCircle, ShoppingBag, Trash2 } from 'lucide-react'
 import { useCart } from '../../context/CartContext'
-import { useToast } from '../../context/ToastContext'
+import { useProductActions } from './useProductActions'
 import { formatPrice } from '../../lib/format'
 import { Button } from '../ui/Button'
 import { EmptyState } from '../ui/EmptyState'
@@ -10,7 +10,7 @@ import { ProductImage } from './ProductImage'
 
 export function CartDrawer() {
   const cart = useCart()
-  const notify = useToast()
+  const actions = useProductActions()
 
   return (
     <Modal
@@ -29,7 +29,7 @@ export function CartDrawer() {
             <Button
               size="lg"
               block
-              onClick={() => notify('Demonstração: o envio do pedido pelo WhatsApp entra na próxima etapa', 'info')}
+              onClick={actions.checkoutCart}
             >
               <MessageCircle className="h-5 w-5" /> Finalizar pedido
             </Button>

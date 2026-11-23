@@ -9,7 +9,9 @@ Loja de acessórios eletrônicos (carregadores, cabos, fones, power banks e outr
 **Loja (`/`)**
 - Produtos e categorias vêm do Supabase. Só aparecem produtos `ativo` de categorias ativas.
 - Disponibilidade pelo estoque real: `0` → **Esgotado** (sem botão de compra), `1` → **Última unidade**, até o limite de estoque baixo → **Últimas unidades**, acima → **Em estoque**.
-- Atualiza sozinho quando o banco muda. Clicar em "Comprar" **não** mexe no estoque.
+- Atualiza sozinho quando o banco muda.
+- **Compra pelo WhatsApp:** "Comprar" (e "Finalizar pedido" no carrinho) abre uma tela de confirmação com produto e preço; "Continuar para o WhatsApp" abre a conversa com a loja (`wa.me/5581999355098`) com a mensagem pronta. "Tenho interesse" faz o mesmo com uma mensagem de dúvida (ou pedido de aviso, se esgotado).
+- Nada disso mexe no estoque: o administrador atualiza o estoque no painel depois de confirmar a venda. O número do WhatsApp fica em `src/config/store.ts`.
 
 **Painel (`/admin`)** — só para administradores
 - Login com e-mail e senha do Supabase. Contas que não estão na tabela `admins` são recusadas.
@@ -101,5 +103,4 @@ supabase/
 
 ## Próximas etapas
 
-- Envio do pedido e do interesse pelo WhatsApp (`src/components/store/useProductActions.ts` e `CartDrawer.tsx`).
 - Publicação.

@@ -49,11 +49,11 @@ export function ProductDetail({ product, onClose }: { product: Product | null; o
               </div>
             )}
             <div className="grid grid-cols-2 gap-2">
-              <Button variant="outline" size="lg" onClick={() => actions.interest(product)}>
+              <Button variant="outline" size="lg" onClick={() => { actions.interest(product); onClose() }}>
                 <Heart className="h-4 w-4" /> Tenho interesse
               </Button>
               <Button size="lg" disabled={!available} onClick={() => { actions.buyNow(product, qty); onClose() }}>
-                <ShoppingBag className="h-4 w-4" /> {available ? 'Comprar' : 'Indisponível'}
+                <ShoppingBag className="h-4 w-4" /> {available ? 'Comprar' : 'Produto esgotado'}
               </Button>
             </div>
             {available && (

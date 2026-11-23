@@ -1,10 +1,15 @@
 import { useCart } from '../../context/CartContext'
+import { usePurchase } from '../../context/PurchaseContext'
 import { useToast } from '../../context/ToastContext'
 import type { Product } from '../../types'
 
-/** Ações dos botões "Tenho interesse" e "Comprar", compartilhadas pelo card e pelos detalhes. */
+/**
+ * Ações dos botões dos produtos. "Comprar" e "Tenho interesse" abrem a tela de
+ * confirmação; só ela leva ao WhatsApp. Nada aqui altera o estoque.
+ */
 export function useProductActions() {
   const cart = useCart()
+  const purchase = usePurchase()
   const notify = useToast()
 
   return {
@@ -13,12 +18,13 @@ export function useProductActions() {
       notify(`${product.name} foi para o carrinho`)
     },
     buyNow(product: Product, quantity = 1) {
-      cart.add(product.id, quantity)
-      cart.open()
+      purchase.start({ mode: 'buy', productId: product.id, quantity })
     },
     interest(product: Product) {
-      // Próxima etapa: abrir conversa no WhatsApp com o nome do produto já preenchido.
-      notify(`Interesse em "${product.name}" registrado (demonstração: o WhatsApp entra na próxima etapa)`, 'info')
+      purchase.start({ mode: 'interest', productId: product.id })
+    },
+    checkoutCart() {
+      purchase.start({ mode: 'cart' })
     },
   }
 }

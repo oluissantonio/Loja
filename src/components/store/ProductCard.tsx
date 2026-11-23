@@ -46,7 +46,7 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: (p:
             </Button>
             <Button size="sm" className="h-10 flex-1" disabled={!available} onClick={() => actions.buyNow(product)}>
               <ShoppingBag className="h-4 w-4" />
-              {available ? 'Comprar' : 'Indisponível'}
+              {available ? 'Comprar' : 'Esgotado'}
             </Button>
           </div>
         </div>
