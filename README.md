@@ -74,6 +74,20 @@ npx supabase start
 npm run test:rls
 ```
 
+## Publicação (Vercel)
+
+O projeto está ligado à Vercel (projeto **hillutech**, endereço **hillutech.vercel.app**). Cada envio para a branch principal do GitHub publica uma versão nova; outras branches geram uma pré-visualização.
+
+| Configuração | Valor |
+| --- | --- |
+| Framework | Vite (build `npm run build`, saída `dist`) |
+| `VITE_SUPABASE_URL` | URL do projeto Supabase |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Chave pública (publishable/anon). Nunca a secret/service_role |
+| Rotas | `vercel.json` manda todas as rotas para o `index.html` (necessário para `/admin`) |
+| Segurança | `vercel.json` envia cabeçalhos de segurança (CSP, bloqueio de moldura/iframe, nosniff etc.) |
+
+No Supabase, em **Authentication → URL Configuration**, use `https://hillutech.vercel.app` como **Site URL**.
+
 ## Rodar no computador
 
 ```bash

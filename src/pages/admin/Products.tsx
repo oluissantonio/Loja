@@ -24,7 +24,7 @@ const FILTERS: Record<Filter, string> = {
   ativos: 'Ativos',
   inativos: 'Inativos',
   disponiveis: 'Com estoque',
-  baixo: `Estoque baixo (≤ ${LOW_STOCK_LIMIT})`,
+  baixo: `Estoque baixo (≤\u00a0${LOW_STOCK_LIMIT})`,
   esgotados: 'Esgotados',
 }
 
@@ -129,7 +129,7 @@ export default function Products() {
         <button className="text-left" onClick={() => showFilter('todos')}><StatCard icon={<Boxes className="h-5 w-5" />} label="Produtos cadastrados" value={status === 'ready' ? stats.total : '–'} /></button>
         <button className="text-left" onClick={() => showFilter('ativos')}><StatCard icon={<CheckCircle2 className="h-5 w-5" />} label="Ativos na loja" value={status === 'ready' ? stats.active : '–'} tone="bg-emerald-50 text-emerald-600" /></button>
         <button className="text-left" onClick={() => showFilter('esgotados')}><StatCard icon={<PackageX className="h-5 w-5" />} label="Esgotados" value={status === 'ready' ? stats.out : '–'} tone="bg-slate-100 text-slate-500" /></button>
-        <button className="text-left" onClick={() => showFilter('baixo')}><StatCard icon={<AlertTriangle className="h-5 w-5" />} label={`Estoque baixo (≤ ${LOW_STOCK_LIMIT})`} value={status === 'ready' ? stats.low : '–'} tone="bg-amber-50 text-amber-600" /></button>
+        <button className="text-left" onClick={() => showFilter('baixo')}><StatCard icon={<AlertTriangle className="h-5 w-5" />} label={`Estoque baixo (≤\u00a0${LOW_STOCK_LIMIT})`} value={status === 'ready' ? stats.low : '–'} tone="bg-amber-50 text-amber-600" /></button>
         <div className="col-span-2 lg:col-span-1"><StatCard icon={<Layers className="h-5 w-5" />} label="Unidades em estoque" value={status === 'ready' ? stats.units.toLocaleString('pt-BR') : '–'} tone="bg-brand-50 text-brand-600" /></div>
       </div>
 
