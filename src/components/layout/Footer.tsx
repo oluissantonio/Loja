@@ -1,4 +1,4 @@
-import { Instagram, MapPin, Phone } from 'lucide-react'
+import { Instagram, Mail, MapPin, Phone } from 'lucide-react'
 import { Logo } from '../ui/Logo'
 import { NAV } from './Header'
 
@@ -20,6 +20,7 @@ export function Footer() {
           <p className="font-display text-sm font-semibold text-white">Contato</p>
           <ul className="mt-3 space-y-2.5 text-sm">
             <li><a href="tel:+5581999355098" className="flex items-center gap-2 hover:text-white"><Phone className="h-4 w-4 text-brand-400" /> (81) 99935-5098</a></li>
+            <li><a href="mailto:hillutech@gmail.com" className="flex items-center gap-2 break-all hover:text-white"><Mail className="h-4 w-4 shrink-0 text-brand-400" /> hillutech@gmail.com</a></li>
             <li><a href="https://www.instagram.com/hillutech" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-white"><Instagram className="h-4 w-4 text-brand-400" /> @hillutech</a></li>
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-brand-400" /> Recife, PE</li>
           </ul>
