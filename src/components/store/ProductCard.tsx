@@ -39,12 +39,12 @@ export function ProductCard({ product, onOpen }: { product: Product; onOpen: (p:
 
         <div className="mt-auto pt-3">
           <Price price={product.price} oldPrice={product.oldPrice} showPercent={false} />
-          <div className="mt-3 flex gap-2">
-            <Button size="sm" variant="outline" className="h-10 px-0 w-10 sm:w-auto sm:px-3" onClick={() => actions.interest(product)} aria-label="Tenho interesse">
+          <div className="mt-3 flex flex-col gap-2 min-[360px]:flex-row">
+            <Button size="sm" variant="outline" className="h-10 w-full px-0 min-[360px]:w-10 sm:w-auto sm:px-3" onClick={() => actions.interest(product)} aria-label="Tenho interesse">
               <Heart className="h-4 w-4" />
               <span className="hidden sm:inline">Interesse</span>
             </Button>
-            <Button size="sm" className="h-10 flex-1" disabled={!available} onClick={() => actions.buyNow(product)}>
+            <Button size="sm" className="h-10 shrink-0 min-[360px]:flex-1" disabled={!available} onClick={() => actions.buyNow(product)}>
               <ShoppingBag className="h-4 w-4" />
               {available ? 'Comprar' : 'Esgotado'}
             </Button>
