@@ -11,8 +11,23 @@ import type { Product } from '../types'
 /** "R$ 69,99" com espaço comum (o formatador usa um espaço especial que alguns apps mostram estranho). */
 export const priceText = (value: number) => formatPrice(value).replace(/\s/g, ' ')
 
-export function whatsappLink(message: string, phone = STORE.whatsapp) {
-  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+/** Celular ou tablet: aparelhos onde o app do WhatsApp abre direto pelo wa.me. */
+export function isMobileDevice(ua = typeof navigator === 'undefined' ? '' : navigator.userAgent) {
+  if (/Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(ua)) return true
+  // iPad recente se identifica como Mac, mas tem tela de toque.
+  return /Macintosh/.test(ua) && typeof navigator !== 'undefined' && navigator.maxTouchPoints > 1
+}
+
+/**
+ * Link para conversar com a loja.
+ * - Celular: wa.me (link oficial), que abre o app do WhatsApp.
+ * - Computador: WhatsApp Web direto. O wa.me no computador abre uma página
+ *   intermediária que tenta abrir o app de computador e, se ele não estiver
+ *   instalado, não leva a lugar nenhum.
+ */
+export function whatsappLink(message: string, phone = STORE.whatsapp, mobile = isMobileDevice()) {
+  const text = encodeURIComponent(message)
+  return mobile ? `https://wa.me/${phone}?text=${text}` : `https://web.whatsapp.com/send?phone=${phone}&text=${text}`
 }
 
 export interface OrderLine {
